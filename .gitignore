@@ -58,4 +58,4 @@ Hope_Horizon_api/static
 Hope_Horizon_api/media
 Hope_Horizon_api/protected
 Hope_Horizon_api/*/migrations/
-Hope_Horizon_api/.venv
+/.venv
