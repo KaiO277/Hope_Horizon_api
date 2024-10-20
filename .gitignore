@@ -52,7 +52,7 @@ Thumbs.db
 
 **/__pycache__/
 
-# /Hope_Horizon_api
+/Hope_Horizon_api
 Hope_Horizon_api/.env
 Hope_Horizon_api/static
 Hope_Horizon_api/media

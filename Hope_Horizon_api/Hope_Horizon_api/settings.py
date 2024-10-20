@@ -139,3 +139,7 @@ CORS_ALLOW_ALL_ORIGINS = True  # Cho phép tất cả các nguồn
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
 ]
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+}
