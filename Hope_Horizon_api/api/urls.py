@@ -9,6 +9,7 @@ from .views import *
 urlpatterns = [
     #
     path('post/', include('api.post.urls')),
+    path('try/', include('api.try.urls')),
 
     #
     path('auth/google/', GoogleView.as_view(), name='google'),

@@ -33,55 +33,54 @@ from .models import *
 
 class GoogleView(APIView):
     def post(self, request):
-
+        # Check if login is locked
         s = Setting.objects.first()
         if s and s.is_lock_login:
-            content = {
-                'message': 'Không thể đăng nhập lúc này'}
-            return Response(content)
+            return Response({'message': 'Cannot login at this time'}, status=status.HTTP_403_FORBIDDEN)
 
-        email = request.data.get("email")
-        print("GoogleView_email: ", email)
-        payload = {'access_token': request.data.get(
-            "token_google")}  # validate the token
-        r = requests.get(
-            'https://www.googleapis.com/oauth2/v2/userinfo', params=payload)
-        data = json.loads(r.text)
+        token_google = request.data.get("token_google")
+        if not token_google:
+            return Response({'message': 'Missing token'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if 'error' in data:
-            content = {
-                'message': 'wrong google token / this google token is already expired.'}
-            return Response(content)
+        # Verify token with Google
+        google_verification_url = f"https://oauth2.googleapis.com/tokeninfo?id_token={token_google}"
+        google_response = requests.get(google_verification_url)
+        google_data = google_response.json()
 
-        print("GoogleView_data: ", data)
+        # Handle invalid or expired token
+        if google_response.status_code != 200 or 'error' in google_data:
+            return Response({'message': 'wrong google token / this google token is already expired.'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        email = data["email"]
-        # create user if not exist
-        print(email)
+        # Extract email from Google's verified data
+        email = google_data.get("email")
+        if not email:
+            return Response({'message': 'Email not found in Google token'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if user exists, otherwise create a new user
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            print("GoogleView_User.DoesNotExist")
-            # token_google = request.data.get("token_google")
-            # avatar = request.data.get("imageUrl")
-            first_name = request.data.get("givenName")
-            last_name = request.data.get("familyName")
-            user = User()
-            user.username = email
-            # provider random default password
-            user.password = make_password(
-                BaseUserManager().make_random_password())
-            user.email = email
-            user.first_name = first_name
-            user.last_name = last_name
+            first_name = google_data.get("given_name", "")
+            last_name = google_data.get("family_name", "")
+            user = User(
+                username=email,
+                email=email,
+                first_name=first_name,
+                last_name=last_name,
+                password=make_password(BaseUserManager().make_random_password())  # Random password
+            )
             user.save()
 
-        # generate token without username & password
+            # Add user to 'MEMBER' group
+            # member_group = Group.objects.get(name=settings.GROUP_NAME['MEMBER'])
+            # member_group.user_set.add(user)
+
+        # Generate JWT tokens for the user
         token = RefreshToken.for_user(user)
-        response = {}
-        response['access'] = str(token.access_token)
-        response['refresh'] = str(token)
-        return Response(response)
+        return Response({
+            'access': str(token.access_token),
+            'refresh': str(token)
+        }, status=status.HTTP_200_OK)
 
 # class GoogleView(APIView):
 #     def post(self, request):
@@ -89,41 +88,87 @@ class GoogleView(APIView):
 #         if s and s.is_lock_login:
 #             return Response({'message': 'Không thể đăng nhập lúc này'})
 
-#         token = request.data.get("token_google")
-#         print("Received token:", token)
+#         # Log incoming request data for debugging
+#         print("GoogleView_request_data: ", request.data)
 
-#         payload = {'access_token': token}
+#         # Fetch token and email from request
+#         token_google = request.data.get("token_google")
+#         email = request.data.get("email")
+#         print("GoogleView_token_google: ", token_google)
+#         print("GoogleView_email: ", email)
+
+#         # Validate the Google token using the /userinfo endpoint
+#         payload = {'access_token': token_google}
 #         r = requests.get('https://www.googleapis.com/oauth2/v2/userinfo', params=payload)
-        
-#         print("Google API response:", r.text)  # Ghi log phản hồi từ Google
-        
-#         data = r.json()  # Chuyển đổi phản hồi thành JSON
+
+#         try:
+#             data = r.json()  # Parse the Google API response
+#         except json.JSONDecodeError as e:
+#             print("Error decoding JSON from Google:", str(e))
+#             return Response({'message': 'Error decoding Google response'})
+
 #         if 'error' in data:
-#             return Response({'message': 'wrong google token / this google token is already expired.'})
+#             return Response({'message': 'Invalid or expired Google token.'})
 
+#         # Log the Google response data for debugging
+#         print("GoogleView_data_from_Google: ", data)
+
+#         # Extract email from the Google API response
 #         email = data.get("email")
-#         if not email:
-#             return Response({'message': 'Email not found in Google token data.'})
+#         print("GoogleView_email_from_Google: ", email)
 
-#         print("GoogleView email:", email)
-
-#         # Tạo người dùng nếu không tồn tại
+#         # Check if user exists, otherwise create a new user
 #         try:
 #             user = User.objects.get(email=email)
 #         except User.DoesNotExist:
-#             first_name = data.get("given_name")
-#             last_name = data.get("family_name")
-#             user = User()
-#             user.username = email
-#             user.password = make_password(BaseUserManager().make_random_password())
-#             user.email = email
-#             user.first_name = first_name
-#             user.last_name = last_name
+#             print("GoogleView_User.DoesNotExist, creating new user")
+#             first_name = data.get("given_name", "")
+#             last_name = data.get("family_name", "")
+#             user = User(
+#                 username=email,
+#                 password=make_password(BaseUserManager().make_random_password()),
+#                 email=email,
+#                 first_name=first_name,
+#                 last_name=last_name
+#             )
 #             user.save()
 
+#         # Generate JWT tokens for the user
 #         token = RefreshToken.for_user(user)
 #         response = {
 #             'access': str(token.access_token),
 #             'refresh': str(token)
 #         }
 #         return Response(response)
+    
+# class GoogleAuth(APIView):
+# def post(self, request):
+#     data = request.data
+#     token = data.get('credential')
+#     try:
+#         idinfo = id_token.verify_oauth2_token(token, google_requests.Request(), google_client_id)
+
+#         if not (idinfo["aud"] == google_client_id == data.get("clientId")):
+#             raise ValidationError("Invalid client ID.")
+#     except:
+#         # Invalid token
+#         return Response({"status": "invalid token"}, status=400)
+#     else:
+#         userid = str(idinfo['sub'])
+#         email = idinfo.get('email')
+#         name = idinfo.get("name")
+#         google_users_group, created = Group.objects.get_or_create(name="google_users")
+
+
+#         user = google_users_group.user_set.filter(google_id=userid)
+#         user_exists = user.exists()
+#         if user_exists:# login account
+#             user = user.first()
+#         else: # create account
+#             username = random_username_from_name(name)
+#             user = User.objects.create_user(username=username, email=email, name=name, password="",
+#                                             groups=[google_users_group], hash=False, google_id=userid)
+#             picture_url = idinfo.get("picture", None)
+#             if picture_url is not None:
+#                 add_image_from_url(user, "avatar", picture_url)
+#         return return_user_data(user)
