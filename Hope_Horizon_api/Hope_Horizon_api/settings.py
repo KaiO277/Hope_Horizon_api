@@ -182,3 +182,9 @@ GROUP_NAME = {
 
 SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
+
+CKEDITOR_CONFIGS = {
+    "default": {
+        "versionCheck": False
+    }
+}
