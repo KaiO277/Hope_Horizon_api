@@ -9,6 +9,7 @@ from .views import *
 urlpatterns = [
     #
     path('post/', include('api.post.urls')),
+    path('podcast/', include('api.podcast.urls')),
     path('try/', include('api.try.urls')),
 
     #
