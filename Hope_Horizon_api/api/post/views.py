@@ -18,12 +18,6 @@ from api import status_http
 
 class PostCateMVS(viewsets.ModelViewSet):
     serializers_class = PostCateSerializers
-
-    def get_serializer(self, *args, **kwargs):
-        pass
-
-    def get_serializer_class(self):
-        pass
     
     @action(methods=['GET'], detail = False, url_path='post_cate_get_all_api', url_name='post_cate_get_all_api')
     def post_cate_get_all_api(self, request, *args, **kwargs):
@@ -50,7 +44,7 @@ class PostCateMVS(viewsets.ModelViewSet):
     def post_cate_update_api(self, request, *args, **kwargs):
         try:
             serializer = self.serializers_class(data=request.data)
-            print(serializer)
+            # print(serializer)
             if serializer.is_valid():
                 print(request)
                 model = serializer.update(request)
@@ -65,7 +59,88 @@ class PostCateMVS(viewsets.ModelViewSet):
         except Exception as error:
             print("PostCateMVS_edit_api_error: ", error)
             return Response({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
+        
+    @action(methods=['DELETE'], detail=False, url_path='post_cate_delete_api', url_name='post_cate_delete_api')
+    def post_cate_delete_api(self, request, *args, **kwargs):
+        try:
+            serializers = self.serializer_class(data=request.data)
+            if serializers.is_valid():
+                data = {}
+                result = serializers.delete(request)
+                if result:
+                    data['message'] = 'Delete successfully!'
+                    return Response(data=data, status=status.HTTP_204_NO_CONTENT)
+            return Response(data=serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            print("PostCateMVS_delete_api_error: ", error)
+        return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
 
+class PostAuthorMVS(viewsets.ModelViewSet):
+    serializer_class = PostAuthorSerializers
+
+    @action(methods=['POST'], detail=False, url_name='post_author_add_api', url_path='post_author_add_api')
+    def post_author_add_api(self, request, *args, **kwargs):
+        try:
+            serializers = self.serializer_class(data=request.data)
+            if serializers.is_valid():
+                model = serializers.add(request)
+                if model:
+                    data = {}
+                    data['message'] = 'Add successfully!'
+                    return Response(data=data, status=status.HTTP_201_CREATED)
+            return Response(data=serializers.error, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            print("PostAuthorMVS_add_api: ", error)
+        return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(methods=['GET'], detail=False, url_name='post_author_get_all_api', url_path='post_author_get_all_api')
+    def post_author_get_all_api(self, request, *args, **kwargs):
+        queryset = PostAuthor.objects.all()
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['GET'], detail=False, url_path='post_author_get_by_id_api', url_name='post_author_get_by_id_api')
+    def post_author_get_by_id_api(self, request, *args, **kwargs):
+        try:
+            post_author_id = kwargs['id']
+            if post_author_id == 0:
+                return Response(data={}, status=status.HTTP_200_OK)
+            queryset = PostAuthor.objects.get(pk = post_author_id)
+            serializer = self.serializer_class(queryset, many=False)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as error:
+            print("PostAuthorMVS_get_by_id_api_error: ", error)
+        return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['PATCH'], detail=False, url_name='post_author_update_api', url_path='post_author_update_api')
+    def post_author_update_api(self, request, *args, **kwargs):
+        try:
+            serializer = self.serializer_class(data= request.data)
+            if serializer.is_valid():
+                model = serializer.update(request)
+                if model:
+                    data = {}
+                    data['message'] = 'Update successfully!'
+                    return Response(data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            print("PostAuthorMVS_update_api_error: ", error)
+        return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['DELETE'], detail=False, url_path='post_author_delete_api', url_name='post_author_delete_api')
+    def post_author_delete_api(self, request, *args, **kwargs):
+        try:
+            serializers = self.serializer_class(data=request.data)
+            if serializers.is_valid():
+                data = {}
+                result = serializers.delete(request)
+                if result:
+                    data['message'] = 'Delete successfully!'
+                    return Response(data=data, status=status.HTTP_204_NO_CONTENT)
+            return Response(data=serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            print("PostAuthorMVS_delete_api_error: ", error)
+        return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PostIndexMVS(viewsets.ModelViewSet):
