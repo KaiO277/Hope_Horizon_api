@@ -2,9 +2,17 @@ from django.db import models
 from api.submodels.models_post import *
 from api.submodels.models_podcast import *
 from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    birthday = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Profile of {self.user.username}"
 
 class SessionToken(models.Model):
     user = models.OneToOneField(

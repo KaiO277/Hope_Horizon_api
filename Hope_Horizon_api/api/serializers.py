@@ -31,46 +31,23 @@ def _token_get_exp(access_token):
         print("===_token_get_exp", error)
         return None
 
-class RegistrationSerializer(serializers.ModelSerializer):
-    first_name = serializers.CharField(required=True)
-    last_name = serializers.CharField(required=True)
-    email = serializers.EmailField(required=True)
-    phone = serializers.CharField(required=True)
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ['birthday']
+
+class RegisterSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer()  # Thêm profile vào serializer đăng ký
 
     class Meta:
         model = User
-        fields = [
-            "email",
-            "password",
-            "first_name",
-            "last_name",
-            "phone"
-        ]
-        extra_kwargs = {
-            "password": {"write_only": True},
-            # "email":{"validators"+[EmailValidator]},
-        }
+        fields = ['username', 'first_name', 'last_name', 'email', 'password', 'profile']
+        extra_kwargs = {'password': {'write_only': True}}
 
-    def is_email_exist(self):
-        try:
-            user = User.objects.get(email=self.validated_data["email"])
-            return True
-        except:
-            return False
-        
-    def save(self):
-        user = User(
-            email = self.validated_data["email"],
-            username = self.validated_data["email"],
-            first_name = self.validated_data["first_name"],
-            last_name = self.validated_data["last_name"]
-        )
-        password = self.validated_data["password"]
-
-        user.set_password(password)
-        user.is_active = False
-        user.save()
-
+    def create(self, validated_data):
+        profile_data = validated_data.pop('profile')
+        user = User.objects.create_user(**validated_data)
+        Profile.objects.create(user=user, **profile_data)
         return user
     
 class MySimpleJWTSerializer(TokenObtainPairSerializer):
