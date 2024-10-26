@@ -46,9 +46,14 @@ post_index_get_all_api = PostIndexMVS.as_view({
     'get':'post_index_get_all_api'
 })
 
+post_index_get_all_by_post_cate_id_api = PostIndexMVS.as_view({
+    'get':'post_index_get_all_by_post_cate_id_api'
+})
+
 
 urlpatterns = [
     path('post_index_get_all_api/', post_index_get_all_api),
+    path('post_index_get_all_by_post_cate_id_api/<int:post_cate_id>',post_index_get_all_by_post_cate_id_api),
 
     #post_cate
     path('post_cate_get_all_api/', post_cate_get_all_api),

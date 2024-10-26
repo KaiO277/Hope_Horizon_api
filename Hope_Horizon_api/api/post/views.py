@@ -22,7 +22,7 @@ class PostCateMVS(viewsets.ModelViewSet):
     @action(methods=['GET'], detail = False, url_path='post_cate_get_all_api', url_name='post_cate_get_all_api')
     def post_cate_get_all_api(self, request, *args, **kwargs):
         queryset = PostCate.objects.all()
-        serializers = self.serializers_class(queryset)
+        serializers = self.serializers_class(queryset, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)
     
     @action(methods=['POST'], detail = False, url_path='post_cate_add_api', url_name='post_cate_add_api')
@@ -154,3 +154,13 @@ class PostIndexMVS(viewsets.ModelViewSet):
         queryset = PostIndex.objects.all()
         serializers = self.serializer_class(queryset, many=True)
         return Response(data=serializers.data, status=status.HTTP_200_OK)
+    
+    @action(methods=['GET'], detail=False, url_name='post_index_get_all_by_post_cate_id_api', url_path='post_index_get_all_by_post_cate_id_api')
+    def post_index_get_all_by_post_cate_id_api(self, request, *args, **kwargs):
+        post_cate_id = kwargs['post_cate_id']
+        if post_cate_id == 0:
+            return Response(data={}, status=status.HTTP_200_OK)
+        query = Q(post_cate__id = post_cate_id)
+        queryset = PostIndex.objects.filter(query)
+        serializer = self.serializer_class(queryset, many=True, context={"request":request})
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
