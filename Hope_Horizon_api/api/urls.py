@@ -14,5 +14,7 @@ urlpatterns = [
 
     #
     path('auth/google/', GoogleView.as_view(), name='google'),
-    path('auth/login/', MyTokenObtainPairView.as_view()),
+    path('auth/login/', LoginAPIView.as_view(), name='api-login'),
+    path('register/', RegisterAPIView.as_view(), name='api-register'),
+    # path('auth/login/', MyTokenObtainPairView.as_view()),
 ]

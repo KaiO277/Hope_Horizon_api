@@ -188,3 +188,6 @@ CKEDITOR_CONFIGS = {
         "versionCheck": False
     }
 }
+
+# # settings.py
+# AUTH_USER_MODEL = 'api.CustomUser'  # Thay 'your_app_name' bằng tên ứng dụng của bạn

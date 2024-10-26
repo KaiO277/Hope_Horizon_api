@@ -18,6 +18,7 @@ from api import status_http
 
 class PostCateMVS(viewsets.ModelViewSet):
     serializers_class = PostCateSerializers
+    permission_classes = [IsAuthenticated]
     
     @action(methods=['GET'], detail = False, url_path='post_cate_get_all_api', url_name='post_cate_get_all_api')
     def post_cate_get_all_api(self, request, *args, **kwargs):
@@ -77,6 +78,7 @@ class PostCateMVS(viewsets.ModelViewSet):
 
 class PostAuthorMVS(viewsets.ModelViewSet):
     serializer_class = PostAuthorSerializers
+    permission_classes = [IsAuthenticated]
 
     @action(methods=['POST'], detail=False, url_name='post_author_add_api', url_path='post_author_add_api')
     def post_author_add_api(self, request, *args, **kwargs):
@@ -145,6 +147,7 @@ class PostAuthorMVS(viewsets.ModelViewSet):
 
 class PostIndexMVS(viewsets.ModelViewSet):
     serializer_class = PostIndexSerializers
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return PostIndex.objects.all() 
