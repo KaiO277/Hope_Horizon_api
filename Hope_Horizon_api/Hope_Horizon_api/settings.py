@@ -158,8 +158,8 @@ CORS_ALLOWED_ORIGINS = [
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=6000),
-    # 'REFRESH_TOKEN_LIFETIME': timedelta(minutes=15),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),      # Thời gian sống của access token: 30 phút
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),        # Thời gian sống của refresh token: 30 ngày
 }
 
 REST_FRAMEWORK = {
