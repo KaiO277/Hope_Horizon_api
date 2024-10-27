@@ -32,6 +32,8 @@ def _token_get_exp(access_token):
         return None
 
 class ProfileSerializer(serializers.ModelSerializer):
+    birthday = serializers.DateField(input_formats=['%d/%m/%Y', '%Y-%m-%d'])
+
     class Meta:
         model = Profile
         fields = ['birthday']

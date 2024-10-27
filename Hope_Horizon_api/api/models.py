@@ -3,6 +3,7 @@ from api.submodels.models_post import *
 from api.submodels.models_podcast import *
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
+from django.utils import dateformat
 
 # Create your models here.
 
@@ -12,7 +13,9 @@ class Profile(models.Model):
     birthday = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return f"Profile of {self.user.username}"
+        # Format birthday to DD-MM-YYYY if it's not None
+        formatted_birthday = dateformat.format(self.birthday, 'd/m/Y') if self.birthday else "N/A"
+        return f"Profile of {self.user.username}, Birthday: {formatted_birthday}"
 
 class SessionToken(models.Model):
     user = models.OneToOneField(

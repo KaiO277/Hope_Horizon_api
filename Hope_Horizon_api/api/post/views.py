@@ -90,7 +90,7 @@ class PostAuthorMVS(viewsets.ModelViewSet):
                     data = {}
                     data['message'] = 'Add successfully!'
                     return Response(data=data, status=status.HTTP_201_CREATED)
-            return Response(data=serializers.error, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data=serializers.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as error:
             print("PostAuthorMVS_add_api: ", error)
         return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
