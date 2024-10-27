@@ -22,7 +22,7 @@ class PostCateSerializers(serializers.ModelSerializer):
 
     def update(self,request):
         try:
-            print("post_cate_id: ",self.validated_data['title'])
+            # print("post_cate_id: ",self.validated_data['title'])
             post_cate_id = self.validated_data['id']
             title = self.validated_data['title']
 

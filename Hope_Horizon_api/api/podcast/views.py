@@ -42,4 +42,33 @@ class PodcastCateMVS(viewsets.ModelViewSet):
         except Exception as e:
             print("PodcastCateMVS_add_api: ", e)
         return Response({'error': 'Bad request'}, status = status.HTTP_BAD_REQUEST)
+    
+    @action(methods=['PATCH'], detail=False, url_path='podcast_cate_update_api', url_name='podcast_cate_update_api')
+    def podcast_cate_update_api(self, request, *args, **kwargs):
+        try:
+            serializer = self.serializer_class(data = request.data)
+            if serializer.is_valid():
+                model = serializer.update(request)
+                if model:
+                    data = {}
+                    data['message'] = 'Update successfully!'
+                    return Response(data=data, status=status.HTTP_200_OK)
+            return Response(data=serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print("PodcastCateMVS_update_api: ", e)
+            return Response({'error': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(methods=['DELETE'], detail=False, url_path='podcast_cate_delete_api', url_name='podcast_cate_delete_api')
+    def podcast_cate_delete_api(self, request, *args, **kwargs):
+        try:
+            serializers = self.serializer_class(data=request.data)
+            if serializers.is_valid():
+                data = {}
+                result = serializers.delete(request)
+                if result:
+                    data['message'] = 'Delete successfully!'
+                    return Response(data=data, status=status.HTTP_204_NO_CONTENT)
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print("PodcastCateMVS_delete_api_error: ", e)
+        return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
