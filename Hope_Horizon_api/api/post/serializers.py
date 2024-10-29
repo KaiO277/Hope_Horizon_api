@@ -129,6 +129,33 @@ class PostIndexSerializers(serializers.ModelSerializer):
         except Exception as error:
             print("PostIndexSerializer_delete_error: ", error)
             return None
+        
+    def update(self, request):
+        try:
+            title = self.validated_data['title']
+            text_short = self.validated_data['text_short']
+            text_long = self.validated_data['text_long']
+            image_title = self.validated_data['image_title']
+            post_cate_id = self.validated_data['post_cate_id']
+            post_author_id = self.validated_data['post_author_id']
+            post_index_id = self.validated_data['id']
+
+            post_index = PostIndex.objects.get(pk=post_index_id)
+
+            post_index.title = title
+            post_index.text_short = text_short
+            post_index.text_long = text_long
+            post_index.image_title = image_title
+            post_index.post_cate_id = post_cate_id
+            post_index.post_author_id = post_author_id
+            post_index.save()
+            return post_index
+        except PostIndex.DoesNotExist:
+            print("PostIndexSerializers_update_DoesNotExist ")
+            return None
+        except Exception as error:
+            print("PostIndexSerializers_update_error: ", error)
+            return None
 
 
     

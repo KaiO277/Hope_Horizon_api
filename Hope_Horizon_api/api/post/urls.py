@@ -58,12 +58,17 @@ post_index_delete_api = PostIndexMVS.as_view({
     'delete':'post_index_delete_api'
 })
 
+post_index_update_api = PostIndexMVS.as_view({
+    'patch':'post_index_update_api'
+})
+
 
 urlpatterns = [
     path('post_index_get_all_api/', post_index_get_all_api),
     path('post_index_get_all_by_post_cate_id_api/<int:post_cate_id>',post_index_get_all_by_post_cate_id_api),
     path('post_index_add_api/', post_index_add_api),
     path('post_index_delete_api/', post_index_delete_api),
+    path('post_index_update_api/', post_index_update_api),
 
     #post_cate
     path('post_cate_get_all_api/', post_cate_get_all_api),
