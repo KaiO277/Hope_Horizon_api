@@ -30,7 +30,7 @@ podcast_author_add_api = PodcastAuthorMVS.as_view({
 })
 
 podcast_author_update_api = PodcastAuthorMVS.as_view({
-    'update':'podcast_author_update_api'
+    'patch':'podcast_author_update_api'
 })
 
 urlpatterns = [

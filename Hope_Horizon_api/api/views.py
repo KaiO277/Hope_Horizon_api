@@ -131,9 +131,9 @@ class LoginAdminAPIView(APIView):
         password = request.data.get('password')
 
         # Xác thực người dùng
-        user = authenticate(username=username, password=password, is_superuser=True)
+        user = authenticate(username=username, password=password)
 
-        if user is not None:
+        if user is not None and user.is_superuser:
             # Tạo JWT tokens (refresh và access) cho người dùng đã xác thực
             refresh = RefreshToken.for_user(user)
             return Response({
