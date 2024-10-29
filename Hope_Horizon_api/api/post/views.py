@@ -197,3 +197,18 @@ class PostIndexMVS(viewsets.ModelViewSet):
         except Exception as error:
             print("PostindexMVS_delete_api_error: ", error)
         return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['PATCH'], detail=False, url_name='post_index_update_api', url_path='post_index_update_api')
+    def post_index_update_api(self, request, *args, **kwargs):
+        try:
+            serializers = self.serializer_class(data=request.data)
+            if serializers.is_valid():
+                model = serializers.update(request)
+                if model:
+                    data = {}
+                    data['message'] = 'Update successfully!'
+                    return Response(data=data, status=status.HTTP_200_OK)
+            return Response(data=serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            print("PostIndexMVS_update_api: ", error)
+            return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
