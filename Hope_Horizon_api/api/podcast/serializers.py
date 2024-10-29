@@ -36,9 +36,7 @@ class PodcastCateSerializers(serializers.ModelSerializer):
         
     def delete(self, request):
         try:
-            print(self.validated_data['id'])
             model = PodcastCate.objects.get(pk=self.validated_data['id'])
-            print(model)
             model.delete()
             return True 
         except Exception as error:
@@ -87,11 +85,11 @@ class PodcastAuthorSerializers(serializers.ModelSerializer):
             print("PodcastAuthorSerializers_delete_error: ", error)
             return None
 
-# class PostIndexSerializers(serializers.ModelSerializer):
-#     post_cate = PostCateSerializers(required=False)
+class PodcastIndexSerializers(serializers.ModelSerializer):
+    # post_cate = PodcastIndex1(required=False)
     
-#     class Meta:
-#         model = PostIndex
-#         fields = '__all__'
+    class Meta:
+        model = PodcastIndex1
+        fields = '__all__'
 
     

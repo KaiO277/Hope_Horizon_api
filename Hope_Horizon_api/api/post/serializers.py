@@ -39,6 +39,7 @@ class PostCateSerializers(serializers.ModelSerializer):
 
     def delete(self, request):
         try:
+            print("id: ",self.validated_data['id'])
             model = PostCate.objects.get(pk=self.validated_data['id'])
             model.delete()
             return True
@@ -91,10 +92,43 @@ class PostAuthorSerializers(serializers.ModelSerializer):
 class PostIndexSerializers(serializers.ModelSerializer):
     post_cate = PostCateSerializers(required=False)
     post_author = PostAuthorSerializers(required = False)
+    id = serializers.IntegerField(required=False)
+    post_cate_id = serializers.IntegerField(required=False)
+    post_author_id = serializers.IntegerField(required=False)
     
     class Meta:
         model = PostIndex
         fields = '__all__'
+
+    def add(self, request):
+        try:
+            title = self.validated_data['title']
+            text_short = self.validated_data['text_short']
+            text_long = self.validated_data['text_long']
+            image_title = self.validated_data['image_title']
+            post_cate_id = self.validated_data['post_cate_id']
+            post_author_id = self.validated_data['post_author_id']
+
+            return PostIndex.objects.create(
+                title=title,
+                text_short=text_short,
+                text_long=text_long,
+                image_title=image_title,
+                post_cate_id =  post_cate_id,
+                post_author_id = post_author_id
+            )
+        except Exception as error:
+            print("PostIndexSerializers_add_error: ", error)
+            return None
+        
+    def delete(self, request):
+        try:
+            model = PostIndex.objects.get(pk=self.validated_data['id'])
+            model.delete()
+            return True
+        except Exception as error:
+            print("PostIndexSerializer_delete_error: ", error)
+            return None
 
 
     
