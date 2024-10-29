@@ -119,3 +119,29 @@ class LoginAPIView(APIView):
                 {'error': 'Sai tên đăng nhập hoặc mật khẩu'},
                 status=status.HTTP_401_UNAUTHORIZED
             )
+        
+class LoginAdminAPIView(APIView):
+    """
+    API đăng nhập cho người dùng, trả về access và refresh token nếu đăng nhập thành công
+    """
+
+    def post(self, request):
+        # Nhận dữ liệu username và password từ request
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        # Xác thực người dùng
+        user = authenticate(username=username, password=password, is_superuser=True)
+
+        if user is not None:
+            # Tạo JWT tokens (refresh và access) cho người dùng đã xác thực
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response(
+                {'error': 'Sai tên đăng nhập hoặc mật khẩu hoặc bạn không có quyền truy cập'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
