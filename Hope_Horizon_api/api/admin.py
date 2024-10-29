@@ -14,7 +14,7 @@ admin.site.register(PostViews)
 admin.site.register(PodcastCate)
 admin.site.register(PodcastIndex1)
 admin.site.register(PodcastAuthor)
-admin.site.register(PodcastIndex2)
+# admin.site.register(PodcastIndex2)
 admin.site.register(PodcastViews)
 
 # try 

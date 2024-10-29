@@ -64,7 +64,7 @@ class PostCateMVS(viewsets.ModelViewSet):
     @action(methods=['DELETE'], detail=False, url_path='post_cate_delete_api', url_name='post_cate_delete_api')
     def post_cate_delete_api(self, request, *args, **kwargs):
         try:
-            serializers = self.serializer_class(data=request.data)
+            serializers = self.serializers_class(data=request.data)
             if serializers.is_valid():
                 data = {}
                 result = serializers.delete(request)
@@ -167,3 +167,33 @@ class PostIndexMVS(viewsets.ModelViewSet):
         queryset = PostIndex.objects.filter(query)
         serializer = self.serializer_class(queryset, many=True, context={"request":request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+    
+    @action(methods=['POST'], detail=False, url_name='post_index_add_api', url_path='post_index_add_api')
+    def post_index_add_api(self, request, *args, **kwargs):
+        try:
+            serializers = self.serializer_class(data=request.data)
+            if serializers.is_valid():
+                model = serializers.add(request)
+                if model:
+                    data = {}
+                    data['message'] = 'Add successfully!'
+                    return Response(data=data, status=status.HTTP_201_CREATED)
+            return Response(data=serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            print("PostIndexMVS_add_api: ", error)
+        return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(methods=['DELETE'], detail=False, url_name='post_index_delete_api', url_path='post_index_delete_api')
+    def post_index_delete_api(self, request, *args, **kwargs):
+        try:
+            serializers = self.serializer_class(data=request.data)
+            if serializers.is_valid():
+                data = {}
+                result = serializers.delete(request)
+                if result:
+                    data['message'] = 'Delete successfully!'
+                    return Response(data=data, status=status.HTTP_204_NO_CONTENT)
+            return Response(data=serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            print("PostindexMVS_delete_api_error: ", error)
+        return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
