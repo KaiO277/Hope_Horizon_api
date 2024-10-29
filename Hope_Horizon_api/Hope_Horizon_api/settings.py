@@ -154,6 +154,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = True  
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+    "http://192.168.1.8:3000",  # địa chỉ của React client
+    "http://192.168.1.11:5000" 
 ]
 
 
