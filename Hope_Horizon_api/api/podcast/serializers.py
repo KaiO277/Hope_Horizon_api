@@ -58,6 +58,7 @@ class PodcastAuthorSerializers(serializers.ModelSerializer):
         except Exception as error:
             print("PodcastAuthorSerializers_add_error: ", error)
             return None
+        
     def update(self, request):
         try:
             podcast_author_id = self.validated_data['id']
@@ -86,10 +87,65 @@ class PodcastAuthorSerializers(serializers.ModelSerializer):
             return None
 
 class PodcastIndexSerializers(serializers.ModelSerializer):
-    # post_cate = PodcastIndex1(required=False)
+    podcast_cate = PodcastCateSerializers(required=False)
+    podcast_author = PodcastAuthorSerializers(required=False)
+    id = serializers.IntegerField(required=False)
+    podcast_cate_id = serializers.IntegerField(required=False)
+    podcast_author_id = serializers.IntegerField(required=False)
     
     class Meta:
         model = PodcastIndex1
         fields = '__all__'
 
-    
+    def add(self, request):
+        try:
+            title = self.validated_data['title']
+            image_title = self.validated_data['image_title']
+            podcast_cate_id = self.validated_data['podcast_cate_id']
+            podcast_author_id = self.validated_data['podcast_author_id']
+            content = self.validated_data['content']
+        
+            return PodcastIndex1.objects.create(
+                title=title,
+                image_title=image_title,
+                podcast_cate_id=podcast_cate_id,
+                podcast_author_id=podcast_author_id,
+                content=content
+            )
+        except Exception as error:
+            print("PodcastIndexSerializers_add_error: ", error)
+            return None
+        
+    def delete(self, request):
+        try:
+            model = PodcastIndex1.objects.get(pk=self.validated_data['id'])
+            model.delete()
+            return True
+        except Exception as error:
+            print("PodcastIndexSerializers_delete_error: ", error)
+            return None
+        
+    def update(self, request):
+        try:
+            title = self.validated_data['title']
+            image_title = self.validated_data['image_title']
+            podcast_cate_id = self.validated_data['podcast_cate_id']
+            podcast_author_id = self.validated_data['podcast_author_id']
+            content = self.validated_data['content']
+            podcast_index_id = self.validated_data['id']
+
+            podcast_index = PodcastIndex1.objects.get(pk=podcast_index_id)
+
+            podcast_index.title = title
+            podcast_index.image_title = image_title
+            podcast_index.podcast_cate_id = podcast_cate_id
+            podcast_index.podcast_author_id = podcast_author_id
+            podcast_index.content = content
+            podcast_index.save()
+            return podcast_index
+        except PodcastIndex1.DoesNotExist:
+            print("PodcastIndexSerializers_update_error: PodcastIndex1 does not exist")
+            return None
+        except Exception as error:
+            print("PodcastIndexSerializers_update_error: ", error)
+            return None
