@@ -129,3 +129,13 @@ class PodcastAuthorMVS(viewsets.ModelViewSet):
             print("PodcastAuthorMVS_delete_api_error: ", e)
         return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
     
+class PodcastIndexMVS(viewsets.ModelViewSet):
+    serializer_class = PodcastIndexSerializers
+    permission_classes = [IsAuthenticated]
+
+    @action(methods=['GET'], detail=False, url_name='podcast_index_get_all_api', url_path='podcast_index_get_all_api')
+    def podcast_index_get_all_api(self, request, *args, **kwargs):
+        queryset = PodcastIndex1.objects.all()
+        serializers = self.serializer_class(queryset, many=True)
+        return Response(data=serializers.data, status=status.HTTP_200_OK)
+    
