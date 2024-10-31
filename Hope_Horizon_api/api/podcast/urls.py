@@ -42,6 +42,18 @@ podcast_index_get_all_api = PodcastIndexMVS.as_view({
     'get':'podcast_index_get_all_api'
 })
 
+podcast_index_update_api = PodcastIndexMVS.as_view({
+    'patch':'podcast_index_update_api'
+})
+
+podcast_index_delete_api = PodcastIndexMVS.as_view({
+    'delete':'podcast_index_delete_api'
+})
+
+podcast_index_add_api = PodcastIndexMVS.as_view({
+    'post': 'podcast_index_add_api'
+})
+
 urlpatterns = [
     #podcast cate
     path('podcast_cate_get_all_api/', podcast_cate_get_all_api),
@@ -57,4 +69,7 @@ urlpatterns = [
 
     #podcast index
     path('podcast_index_get_all_api/', podcast_index_get_all_api),
+    path('podcast_index_add_api', podcast_index_add_api),
+    path('podcast_index_update_api/', podcast_index_update_api),
+    path('podcast_index_delete_api/', podcast_index_delete_api),
 ]
