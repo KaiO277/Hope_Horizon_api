@@ -188,3 +188,10 @@ class PodcastIndexMVS(viewsets.ModelViewSet):
             print("PodcastIndexMVS_edit_api_error: ", error)
             return Response({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
         
+    @action(methods=['GEt'], detail = False, url_path='podcast_index_get_all_by_podcast_cate_id', url_name='podcast_index_get_all_by_podcast_cate_id')
+    def podcast_index_get_all_by_podcast_cate_id(self, request, *args, **kwargs):
+        try:
+            return None
+        except Exception as error:
+            print("PodcastIndexMVS_get_all_by_podcast_cate_id_api_error: ", error)
+            return None

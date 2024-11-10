@@ -212,3 +212,5 @@ class PostIndexMVS(viewsets.ModelViewSet):
         except Exception as error:
             print("PostIndexMVS_update_api: ", error)
             return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
+        
+    
