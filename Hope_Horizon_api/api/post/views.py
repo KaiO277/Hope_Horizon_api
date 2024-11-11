@@ -41,7 +41,7 @@ class CourseRegisterWebinarPagination(PageNumberPagination):
         })
 
 class PostCateMVS(viewsets.ModelViewSet):
-    serializer_class = PostCateSerializers  # Sửa tên thuộc tính thành 'serializer_class'
+    serializer_class = PostCateSerializers  
     permission_classes = [IsAuthenticated]
     pagination_class = CourseRegisterWebinarPagination
     
@@ -52,11 +52,9 @@ class PostCateMVS(viewsets.ModelViewSet):
         paginated_queryset = paginator.paginate_queryset(queryset, request)
 
         if paginated_queryset is not None:
-            # Dùng self.get_serializer() thay vì self.serializer_class để đảm bảo tính tương thích.
             serializer = self.get_serializer(paginated_queryset, many=True)
             return paginator.get_paginated_response(serializer.data)
 
-        # Nếu không có phân trang, lấy tất cả các kết quả
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -248,5 +246,3 @@ class PostIndexMVS(viewsets.ModelViewSet):
         except Exception as error:
             print("PostIndexMVS_update_api: ", error)
             return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
-        
-    
