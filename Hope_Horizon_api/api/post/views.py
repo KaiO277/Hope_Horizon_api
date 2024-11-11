@@ -48,12 +48,12 @@ class PostCateMVS(viewsets.ModelViewSet):
     @action(methods=['GET'], detail=False, url_path='post_cate_get_all_api', url_name='post_cate_get_all_api')
     def post_cate_get_all_api(self, request, *args, **kwargs):
         queryset = PostCate.objects.all()
-        paginator = CourseRegisterWebinarPagination()
-        paginated_queryset = paginator.paginate_queryset(queryset, request)
+        # paginator = CourseRegisterWebinarPagination()
+        # paginated_queryset = paginator.paginate_queryset(queryset, request)
 
-        if paginated_queryset is not None:
-            serializer = self.get_serializer(paginated_queryset, many=True)
-            return paginator.get_paginated_response(serializer.data)
+        # if paginated_queryset is not None:
+        #     serializer = self.get_serializer(paginated_queryset, many=True)
+        #     return paginator.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
