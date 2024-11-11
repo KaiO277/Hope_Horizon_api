@@ -16,15 +16,51 @@ from api.models import *
 from .serializers import *
 from api import status_http
 
+class CourseRegisterWebinarPagination(PageNumberPagination):
+    page_size = 50
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
+    def get_paginated_response(self, data):
+        next_page = previous_page = None
+        if self.page.has_next():
+            next_page = self.page.next_page_number()
+        if self.page.has_previous():
+            previous_page = self.page.previous_page_number()
+        return Response({
+            'totalRows': self.page.paginator.count,
+            'page_size': self.page_size,
+            'current_page': self.page.number,
+            'next_page': next_page,
+            'previous_page': previous_page,
+            'links': {
+                'next': self.get_next_link(),
+                'previous': self.get_previous_link(),
+            },
+            'data': data,
+        })
+
 class PostCateMVS(viewsets.ModelViewSet):
-    serializers_class = PostCateSerializers
+    serializer_class = PostCateSerializers  # Sửa tên thuộc tính thành 'serializer_class'
     permission_classes = [IsAuthenticated]
+    pagination_class = CourseRegisterWebinarPagination
     
-    @action(methods=['GET'], detail = False, url_path='post_cate_get_all_api', url_name='post_cate_get_all_api')
+    @action(methods=['GET'], detail=False, url_path='post_cate_get_all_api', url_name='post_cate_get_all_api')
     def post_cate_get_all_api(self, request, *args, **kwargs):
         queryset = PostCate.objects.all()
-        serializers = self.serializers_class(queryset, many=True)
-        return Response(serializers.data, status=status.HTTP_200_OK)
+        paginator = CourseRegisterWebinarPagination()
+        paginated_queryset = paginator.paginate_queryset(queryset, request)
+
+        if paginated_queryset is not None:
+            # Dùng self.get_serializer() thay vì self.serializer_class để đảm bảo tính tương thích.
+            serializer = self.get_serializer(paginated_queryset, many=True)
+            return paginator.get_paginated_response(serializer.data)
+
+        # Nếu không có phân trang, lấy tất cả các kết quả
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
     
     @action(methods=['POST'], detail = False, url_path='post_cate_add_api', url_name='post_cate_add_api')
     def post_cate_add_api(self, request, *args, **kwargs):
