@@ -148,3 +148,59 @@ class PodcastIndexMVS(viewsets.ModelViewSet):
         serializers = self.serializer_class(queryset, many=True)
         return Response(data=serializers.data, status=status.HTTP_200_OK)
     
+    @action(methods=['POST'], detail=False, url_name='podcast_index_add_api', url_path='podcast_index_add_api')
+    def podcast_index_add_api(self, request, *args, **kwargs):
+        try:
+            serializers = self.serializer_class(data=request.data)
+            if serializers.is_valid():
+                model = serializers.add(request)
+                if model:
+                    data = {}
+                    data['message'] = 'Add successfully!'
+                    return Response(data=data, status=status.HTTP_201_CREATED)
+            return Response(data=serializers.errors, status = status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            print("PodcastIdexMVS_add_api: ", error)
+        return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(methods=['DELETE'], detail=False, url_name='podcast_index_delete_api', url_path='podcast_index_delete_api')
+    def podcast_index_delete_api(self, request, *args, **kwargs):
+        try:
+            serializers = self.serializer_class(data=request.data)
+            if serializers.is_valid():
+                data = {}
+                result = serializers.delete(request)
+                if result:
+                    data['message'] = 'Delete successfully!'
+                    return Response(data=data, status=status.HTTP_204_NO_CONTENT)
+            return Response(data=serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            print("PodcastIndexMVS_delete_api_error: ",error)
+        return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(methods=['PATCH'], detail=False, url_path='podcast_index_update_api', url_name='podcast_index_update_api')
+    def podcast_index_update_api(self, request, *args, **kwargs):
+        try:
+            serializer = self.serializers_class(data=request.data)
+            if serializer.is_valid():
+                print(request)
+                model = serializer.update(request)
+                print(model)
+                if model:
+                    data = {}
+                    data['message'] = 'Update successfully!'
+                    return Response(data=data, status=status.HTTP_200_OK)
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except PodcastIndex1.DoesNotExist:
+            return Response({'error': 'PodcastIndex not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as error:
+            print("PodcastIndexMVS_edit_api_error: ", error)
+            return Response({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
+        
+    @action(methods=['GEt'], detail = False, url_path='podcast_index_get_all_by_podcast_cate_id', url_name='podcast_index_get_all_by_podcast_cate_id')
+    def podcast_index_get_all_by_podcast_cate_id(self, request, *args, **kwargs):
+        try:
+            return None
+        except Exception as error:
+            print("PodcastIndexMVS_get_all_by_podcast_cate_id_api_error: ", error)
+            return None
