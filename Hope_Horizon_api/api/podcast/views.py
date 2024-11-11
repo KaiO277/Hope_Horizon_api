@@ -28,12 +28,12 @@ class PodcastCateMVS(viewsets.ModelViewSet):
     @action(methods=['GET'], detail=False, url_path='podcast_cate_get_all_api', url_name='podcast_cate_get_all_api')
     def podcast_cate_get_all_api(self, request, *args, **kwargs):
         queryset = PodcastCate.objects.all()
-        paginator = CourseRegisterWebinarPagination()
-        paginated_queryset = paginator.paginate_queryset(queryset, request)
+        # paginator = CourseRegisterWebinarPagination()
+        # paginated_queryset = paginator.paginate_queryset(queryset, request)
 
-        if  paginated_queryset is not None:
-            serializer = self.get_serializer(paginated_queryset, many = True)
-            return paginator.get_paginated_response(serializer.data)
+        # if  paginated_queryset is not None:
+        #     serializer = self.get_serializer(paginated_queryset, many = True)
+        #     return paginator.get_paginated_response(serializer.data)
         
         serializers = self.serializer_class(queryset, many=True)
         return Response(data=serializers.data, status=status.HTTP_200_OK)
