@@ -69,7 +69,7 @@ urlpatterns = [
 
     #podcast index
     path('podcast_index_get_all_api/', podcast_index_get_all_api),
-    path('podcast_index_add_api', podcast_index_add_api),
+    path('podcast_index_add_api/', podcast_index_add_api),
     path('podcast_index_update_api/', podcast_index_update_api),
     path('podcast_index_delete_api/', podcast_index_delete_api),
 ]
