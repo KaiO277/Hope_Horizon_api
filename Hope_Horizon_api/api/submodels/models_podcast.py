@@ -23,7 +23,7 @@ class PodcastAuthor(models.Model):
         return self.name 
     
 class PodcastIndex1(models.Model):
-    title = models.CharField(max_length=50, null=True, blank=True)
+    title = models.CharField(max_length=250, null=True, blank=True)
     image_title = models.ImageField(upload_to='uploads/', null=True, blank=True)
     content = models.FileField(upload_to='audio_uploads/', null=True, blank=True)
     podcast_cate = models.ForeignKey(
