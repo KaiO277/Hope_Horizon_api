@@ -28,7 +28,7 @@ class PostAuthor(models.Model):
         return self.name 
     
 class PostIndex(models.Model):
-    title = models.CharField(max_length=50, null=True, blank=True)
+    title = models.CharField(max_length=250, null=True, blank=True)
     text_short = models.CharField(max_length=250, null=True, blank=True)
     text_long = RichTextField(blank=True, null=True) 
     image_title = models.ImageField(upload_to='uploads/', null=True, blank=True)
