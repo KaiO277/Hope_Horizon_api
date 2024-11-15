@@ -20,6 +20,10 @@ podcast_cate_delete_api = PodcastCateMVS.as_view({
     'delete':'podcast_cate_delete_api'
 })
 
+podcast_cate_get_all_api_pagi = PodcastCateMVS.as_view({
+    'get':'podcast_cate_get_all_api_pagi'
+})
+
 #podcast author
 podcast_author_get_all_api = PodcastAuthorMVS.as_view({
     'get':'podcast_author_get_all_api'
@@ -60,6 +64,7 @@ urlpatterns = [
     path('podcast_cate_add_api/', podcast_cate_add_api),
     path('podcast_cate_update_api/', podcast_cate_update_api),
     path('podcast_cate_delete_api/', podcast_cate_delete_api),
+    path('podcast_cate_get_all_api_pagi/', podcast_cate_get_all_api_pagi),
 
     #podcast author
     path('podcast_author_get_all_api/', podcast_author_get_all_api),
