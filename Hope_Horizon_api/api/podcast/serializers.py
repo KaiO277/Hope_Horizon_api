@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from api.models import *
 from api.submodels import *
+from api.podcast.utils import generate_unique_podcast_title 
 
 class PodcastCateSerializers(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
@@ -99,19 +100,32 @@ class PodcastIndexSerializers(serializers.ModelSerializer):
 
     def add(self, request):
         try:
+            # Lấy dữ liệu từ request
             title = self.validated_data['title']
-            image_title = self.validated_data['image_title']
-            podcast_cate_id = self.validated_data['podcast_cate_id']
-            podcast_author_id = self.validated_data['podcast_author_id']
-            content = self.validated_data['content']
-        
-            return PodcastIndex1.objects.create(
-                title=title,
+            image_title = self.validated_data.get('image_title')  # Có thể không có
+            podcast_cate_id = self.validated_data.get('podcast_cate_id')  # Có thể không có
+            podcast_author_id = self.validated_data.get('podcast_author_id')  # Có thể không có
+            content = self.validated_data.get('content')  # Có thể không có
+
+            # Tạo tên podcast duy nhất từ title
+            unique_title = generate_unique_podcast_title(title)
+
+            # Kiểm tra nếu tên này đã tồn tại trong database
+            while PodcastIndex1.objects.filter(title=unique_title).exists():
+                # Nếu đã tồn tại, tạo lại tên mới
+                unique_title = generate_unique_podcast_title(title)
+
+            # Tạo và lưu PodcastIndex1
+            podcast = PodcastIndex1.objects.create(
+                title=unique_title,  # Lưu tên duy nhất
                 image_title=image_title,
                 podcast_cate_id=podcast_cate_id,
                 podcast_author_id=podcast_author_id,
                 content=content
             )
+
+            return podcast
+
         except Exception as error:
             print("PodcastIndexSerializers_add_error: ", error)
             return None
