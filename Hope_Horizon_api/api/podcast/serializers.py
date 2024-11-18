@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from api.models import *
 from api.submodels import *
-from api.podcast.utils import generate_unique_podcast_title 
+from api.podcast.utils import generate_unique_filename 
 
 class PodcastCateSerializers(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
@@ -108,20 +108,15 @@ class PodcastIndexSerializers(serializers.ModelSerializer):
             content = self.validated_data.get('content')  # Có thể không có
 
             # Tạo tên podcast duy nhất từ title
-            unique_title = generate_unique_podcast_title(title)
-
-            # Kiểm tra nếu tên này đã tồn tại trong database
-            while PodcastIndex1.objects.filter(title=unique_title).exists():
-                # Nếu đã tồn tại, tạo lại tên mới
-                unique_title = generate_unique_podcast_title(title)
+            unique_title = generate_unique_filename(title, content)
 
             # Tạo và lưu PodcastIndex1
             podcast = PodcastIndex1.objects.create(
-                title=unique_title,  # Lưu tên duy nhất
+                title=title,  # Lưu tên duy nhất
                 image_title=image_title,
                 podcast_cate_id=podcast_cate_id,
                 podcast_author_id=podcast_author_id,
-                content=content
+                content=unique_title
             )
 
             return podcast

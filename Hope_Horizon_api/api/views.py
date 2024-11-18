@@ -42,6 +42,16 @@ class RegisterAPIView(APIView):
             return Response({"message": "Đăng ký thành công"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class UserMVS(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    # permission_classes = [IsAuthenticated]
+
+    @action(methods=['GET'], detail=False, url_name='user_get_all_api', url_path='user_get_all_api')
+    def user_get_all_api(self, request, *args, **kwargs):
+        query = Q(is_staff = False)
+        queryset = User.objects.filter(query)
+        serializers = self.serializer_class(queryset, many=True, context={"request":request})
+        return Response(serializers.data, status=status.HTTP_200_OK)
 
 class GoogleView(APIView):
     def post(self, request):

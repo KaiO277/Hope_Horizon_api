@@ -102,12 +102,11 @@ class MySimpleJWTSerializer(TokenObtainPairSerializer):
                 print(token)
         return token
 
-
-
-
-
-
-
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MySimpleJWTSerializer
 
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        exclude = ['password', 'last_login', 'is_active', 'user_permissions']
