@@ -110,7 +110,7 @@ class UserMVS(viewsets.ModelViewSet):
 
         # Thêm người dùng vào nhóm
         user.groups.add(group)
-        user.save()
+        # user.save()
 
         return Response({"message": f"User {user.username} added to group {group.name}"}, status=status.HTTP_200_OK)
 
