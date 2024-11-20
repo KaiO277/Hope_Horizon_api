@@ -26,6 +26,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication, JWTTokenU
 from django.contrib.auth.decorators import login_required
 import hashlib
 import urllib.parse
+from django.contrib.auth.models import Group
 
 from .serializers import *
 from . import status_http
@@ -46,12 +47,87 @@ class UserMVS(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     # permission_classes = [IsAuthenticated]
 
+    @action(methods=['GET'], detail=False, url_name='user_get_list_all_api', url_path='user_get_list_all_api')
+    def user_get_list_all_api(self, request, *args, **kwargs):
+        users = User.objects.all()
+
+        # Tạo danh sách Users với thông tin nhóm
+        users_data = [
+            {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "groups": [
+                    {"id": group.id, "name": group.name}
+                    for group in user.groups.all()
+                ]
+            }
+            for user in users
+        ]
+
+        return Response({"users": users_data}, status=status.HTTP_200_OK)
+    
     @action(methods=['GET'], detail=False, url_name='user_get_all_api', url_path='user_get_all_api')
     def user_get_all_api(self, request, *args, **kwargs):
-        query = Q(is_staff = False)
-        queryset = User.objects.filter(query)
-        serializers = self.serializer_class(queryset, many=True, context={"request":request})
-        return Response(serializers.data, status=status.HTTP_200_OK)
+        users = User.objects.filter(groups__isnull=True)  # Đếm số lượng user
+        users_data = [
+            {
+                "id": user.id,
+                "username": user.username,
+            }
+            for user in users
+        ]
+
+        return Response({"users": users_data}, status=status.HTTP_200_OK)
+    
+    @action(methods=['GET'], detail=False, url_name='user_get_count_api', url_path='user_get_count_api')
+    def user_get_count_api(self, request, *args, **kwargs):
+        user_count = User.objects.count()  # Đếm số lượng user
+        return Response(
+            {"user_count": user_count}, 
+            status=status.HTTP_200_OK
+        )
+    
+    @action(methods=['POST'], detail=False, url_name='add_user_to_group', url_path='add_user_to_group')
+    def add_user_to_group(self, request, *args, **kwargs):
+        # Nhận thông tin từ request
+        user_id = request.data.get('user_id')
+        group_id = request.data.get('group_id')
+
+        if not user_id or not group_id:
+            return Response({"error": "Both user_id and group_id are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Kiểm tra người dùng và nhóm có tồn tại không
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            group = Group.objects.get(id=group_id)
+        except Group.DoesNotExist:
+            return Response({"error": "Group not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Thêm người dùng vào nhóm
+        user.groups.add(group)
+        user.save()
+
+        return Response({"message": f"User {user.username} added to group {group.name}"}, status=status.HTTP_200_OK)
+
+    @action(methods=['GET'], detail=False, url_name='group_get_all_api', url_path='group_get_all_api')
+    def group_get_all_api(self, request, *args, **kwargs):
+        groups = Group.objects.all()
+
+        # Serialize group data
+        groups_data = [
+            {
+                "id": group.id,
+                "name": group.name,
+            }
+            for group in groups
+        ]
+
+        return Response({"groups": groups_data}, status=status.HTTP_200_OK)
 
 class GoogleView(APIView):
     def post(self, request):
@@ -136,22 +212,39 @@ class LoginAdminAPIView(APIView):
     """
 
     def post(self, request):
-        # Nhận dữ liệu username và password từ request
         username = request.data.get('username')
         password = request.data.get('password')
 
         # Xác thực người dùng
         user = authenticate(username=username, password=password)
 
-        if user is not None and user.is_superuser:
-            # Tạo JWT tokens (refresh và access) cho người dùng đã xác thực
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-            }, status=status.HTTP_200_OK)
-        else:
+        if user is not None:
+            # Lấy danh sách các nhóm của user
+            user_groups = user.groups.values_list('name', flat=True)
+
+            # Danh sách các nhóm được phép
+            allowed_roles = {'superadmin', 'AuthorPost', 'AuthorPodcast'}
+
+            # Kiểm tra nếu user thuộc một trong các nhóm được phép
+            if set(user_groups).intersection(allowed_roles):
+                # Tạo JWT token
+                refresh = RefreshToken.for_user(user)
+
+                return Response({
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                    'username': user.username,
+                    'roles': list(user_groups),  # Trả về danh sách roles
+                }, status=status.HTTP_200_OK)
+
+            # Nếu không thuộc nhóm được phép
             return Response(
-                {'error': 'Sai tên đăng nhập hoặc mật khẩu hoặc bạn không có quyền truy cập'},
-                status=status.HTTP_401_UNAUTHORIZED
+                {'error': 'Bạn không có quyền truy cập'},
+                status=status.HTTP_403_FORBIDDEN
             )
+
+        # Nếu xác thực thất bại
+        return Response(
+            {'error': 'Sai thông tin đăng nhập'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
