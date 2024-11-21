@@ -50,20 +50,18 @@ class PostCateMVS(viewsets.ModelViewSet):
         queryset = PostCate.objects.all()
         paginator = CourseRegisterWebinarPagination()
         paginated_queryset = paginator.paginate_queryset(queryset, request)
-
+        
         if paginated_queryset is not None:
-            serializer = self.get_serializer(paginated_queryset, many=True)
+            serializer = self.serializer_class(paginated_queryset, many=True)
             return paginator.get_paginated_response(serializer.data)
-
-        serializers = self.get_serializer(queryset, many=True)
-        return Response(serializers.data, status=status.HTTP_200_OK)
-
-
+        
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
     
     @action(methods=['POST'], detail = False, url_path='post_cate_add_api', url_name='post_cate_add_api')
     def post_cate_add_api(self, request, *args, **kwargs):
         try:
-            serializers = self.serializers_class(data=request.data)
+            serializers = self.serializer_class(data=request.data)
             if serializers.is_valid():
                 model = serializers.add(request)
                 if model:
@@ -137,11 +135,11 @@ class PostAuthorMVS(viewsets.ModelViewSet):
         paginated_queryset = paginator.paginate_queryset(queryset, request)
         
         if paginated_queryset is not None:
-            serializer = self.serializer_class(queryset, many=True)
+            serializer = self.serializer_class(paginated_queryset, many=True)
             return paginator.get_paginated_response(serializer.data)
         
-        serializers = self.serializer_class(queryset, many=True)
-        return Response(data=serializers.data, status=status.HTTP_200_OK)
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @action(methods=['GET'], detail=False, url_path='post_author_get_by_id_api', url_name='post_author_get_by_id_api')
     def post_author_get_by_id_api(self, request, *args, **kwargs):
@@ -186,7 +184,6 @@ class PostAuthorMVS(viewsets.ModelViewSet):
             print("PostAuthorMVS_delete_api_error: ", error)
         return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
 
-
 class PostIndexMVS(viewsets.ModelViewSet):
     serializer_class = PostIndexSerializers
     permission_classes = [IsAuthenticated]
@@ -199,13 +196,13 @@ class PostIndexMVS(viewsets.ModelViewSet):
         queryset = PostIndex.objects.all()
         paginator = CourseRegisterWebinarPagination()
         paginated_queryset = paginator.paginate_queryset(queryset, request)
-
-        if  paginated_queryset is not None:
-            serializer = self.get_serializer(paginated_queryset, many = True)
+        
+        if paginated_queryset is not None:
+            serializer = self.serializer_class(paginated_queryset, many=True)
             return paginator.get_paginated_response(serializer.data)
         
-        serializers = self.serializer_class(queryset, many=True)
-        return Response(data=serializers.data, status=status.HTTP_200_OK)
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
     
     @action(methods=['GET'], detail=False, url_name='post_index_get_all_by_post_cate_id_api', url_path='post_index_get_all_by_post_cate_id_api')
     def post_index_get_all_by_post_cate_id_api(self, request, *args, **kwargs):

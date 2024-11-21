@@ -30,13 +30,13 @@ class PodcastCateMVS(viewsets.ModelViewSet):
         queryset = PodcastCate.objects.all()
         paginator = CourseRegisterWebinarPagination()
         paginated_queryset = paginator.paginate_queryset(queryset, request)
-
-        if  paginated_queryset is not None:
-            serializer = self.get_serializer(paginated_queryset, many = True)
+        
+        if paginated_queryset is not None:
+            serializer = self.serializer_class(paginated_queryset, many=True)
             return paginator.get_paginated_response(serializer.data)
         
-        serializers = self.serializer_class(queryset, many=True)
-        return Response(data=serializers.data, status=status.HTTP_200_OK)
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
         
     
     @action(methods=['GET'], detail=False, url_path='podcast_cate_get_all_api', url_name='podcast_cate_get_all_api')
@@ -104,6 +104,13 @@ class PodcastAuthorMVS(viewsets.ModelViewSet):
     @action(methods=['GET'], detail=False, url_name='podcast_author_get_all_api', url_path='podcast_author_get_all_api')
     def podcast_author_get_all_api(self, request, *args, **kwargs):
         queryset = PodcastAuthor.objects.all()
+        paginator = CourseRegisterWebinarPagination()
+        paginated_queryset = paginator.paginate_queryset(queryset, request)
+        
+        if paginated_queryset is not None:
+            serializer = self.serializer_class(paginated_queryset, many=True)
+            return paginator.get_paginated_response(serializer.data)
+        
         serializer = self.serializer_class(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     
@@ -155,6 +162,16 @@ class PodcastAuthorMVS(viewsets.ModelViewSet):
 class PodcastIndexMVS(viewsets.ModelViewSet):
     serializer_class = PodcastIndexSerializers
     permission_classes = [IsAuthenticated]
+
+        #     paginator = CourseRegisterWebinarPagination()
+        # paginated_queryset = paginator.paginate_queryset(queryset, request)
+        
+        # if paginated_queryset is not None:
+        #     serializer = self.serializer_class(paginated_queryset, many=True)
+        #     return paginator.get_paginated_response(serializer.data)
+        
+        # serializer = self.serializer_class(queryset, many=True)
+        # return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @action(methods=['GET'], detail=False, url_name='podcast_index_get_all_api', url_path='podcast_index_get_all_api')
     def podcast_index_get_all_api(self, request, *args, **kwargs):
