@@ -131,6 +131,12 @@ class PostAuthorMVS(viewsets.ModelViewSet):
     @action(methods=['GET'], detail=False, url_name='post_author_get_all_api', url_path='post_author_get_all_api')
     def post_author_get_all_api(self, request, *args, **kwargs):
         queryset = PostAuthor.objects.all()
+        serializers = self.serializer_class(queryset, many=True)
+        return Response(data=serializers.data, status=status.HTTP_200_OK)   
+
+    @action(methods=['GET'], detail=False, url_name='post_author_get_list_page_all_api', url_path='post_author_get_list_page_all_api')
+    def post_author_get_list_page_all_api(self, request, *args, **kwargs):
+        queryset = PostAuthor.objects.all()
         paginator = CourseRegisterWebinarPagination()
         paginated_queryset = paginator.paginate_queryset(queryset, request)
         
@@ -184,6 +190,7 @@ class PostAuthorMVS(viewsets.ModelViewSet):
             print("PostAuthorMVS_delete_api_error: ", error)
         return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
 
+#done
 class PostIndexMVS(viewsets.ModelViewSet):
     serializer_class = PostIndexSerializers
     permission_classes = [IsAuthenticated]
@@ -191,8 +198,14 @@ class PostIndexMVS(viewsets.ModelViewSet):
     def get_queryset(self):
         return PostIndex.objects.all() 
     
-    @action(methods=['GET'], detail=False, url_path='post_index_get_all_api', url_name='post_index_get_all_api')
+    @action(methods=['GET'], detail=False, url_name='post_index_get_all_api', url_path='post_index_get_all_api')
     def post_index_get_all_api(self, request, *args, **kwargs):
+        queryset = PostIndex.objects.all()
+        serializers = self.serializer_class(queryset, many=True)
+        return Response(data=serializers.data, status=status.HTTP_200_OK)
+    
+    @action(methods=['GET'], detail=False, url_path='post_index_get_list_page_all_api', url_name='post_index_get_list_page_all_api')
+    def post_index_get_list_page_all_api(self, request, *args, **kwargs):
         queryset = PostIndex.objects.all()
         paginator = CourseRegisterWebinarPagination()
         paginated_queryset = paginator.paginate_queryset(queryset, request)
