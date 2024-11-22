@@ -94,6 +94,7 @@ class PodcastCateMVS(viewsets.ModelViewSet):
 class PodcastAuthorMVS(viewsets.ModelViewSet):
     serializer_class = PodcastAuthorSerializers
     permission_classes = [IsAuthenticated]
+    pagination_class = CourseRegisterWebinarPagination
 
     @action(methods=['GET'], detail=False, url_name='podcast_author_get_all_api', url_path='podcast_author_get_all_api')
     def podcast_author_get_all_api(self, request, *args, **kwargs):
@@ -161,7 +162,8 @@ class PodcastAuthorMVS(viewsets.ModelViewSet):
     
 class PodcastIndexMVS(viewsets.ModelViewSet):
     serializer_class = PodcastIndexSerializers
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
+    pagination_class = CourseRegisterWebinarPagination
 
     @action(methods=['GET'], detail=False, url_name='podcast_index_get_list_page_all_api', url_path='podcast_index_get_list_page_all_api')
     def podcast_index_get_list_page_all_api(self, request, *args, **kwargs):

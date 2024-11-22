@@ -49,6 +49,10 @@ podcast_author_delete_api = PodcastAuthorMVS.as_view({
 podcast_index_get_all_api = PodcastIndexMVS.as_view({
     'get':'podcast_index_get_all_api'
 })
+# podcast_index_get_list_page_all_api
+podcast_index_get_list_page_all_api = PodcastIndexMVS.as_view({
+    'get':'podcast_index_get_list_page_all_api'
+})
 
 podcast_index_update_api = PodcastIndexMVS.as_view({
     'patch':'podcast_index_update_api'
@@ -78,6 +82,7 @@ urlpatterns = [
     path('podcast_author_delete_api/', podcast_author_delete_api),
 
     #podcast index
+    path('podcast_index_get_list_page_all_api/', podcast_index_get_list_page_all_api),
     path('podcast_index_get_all_api/', podcast_index_get_all_api),
     path('podcast_index_add_api/', podcast_index_add_api),
     path('podcast_index_update_api/', podcast_index_update_api),
