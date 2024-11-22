@@ -29,6 +29,10 @@ podcast_author_get_all_api = PodcastAuthorMVS.as_view({
     'get':'podcast_author_get_all_api'
 })
 
+podcast_author_get_list_page_all_api = PodcastAuthorMVS.as_view({
+    'get':'podcast_author_get_list_page_all_api'
+})
+
 podcast_author_add_api = PodcastAuthorMVS.as_view({
     'post':'podcast_author_add_api'
 })
@@ -68,6 +72,7 @@ urlpatterns = [
 
     #podcast author
     path('podcast_author_get_all_api/', podcast_author_get_all_api),
+    path('podcast_author_get_list_page_all_api/', podcast_author_get_list_page_all_api),
     path('podcast_author_add_api/',podcast_author_add_api),
     path('podcast_author_update_api/', podcast_author_update_api),
     path('podcast_author_delete_api/', podcast_author_delete_api),

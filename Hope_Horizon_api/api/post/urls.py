@@ -8,6 +8,10 @@ post_cate_get_all_api = PostCateMVS.as_view({
     'get': 'post_cate_get_all_api',
 })
 
+post_cate_get_list_page_all_api = PostCateMVS.as_view({
+    'get': 'post_cate_get_list_page_all_api',
+})
+
 post_cate_add_api = PostCateMVS.as_view({
     'post': 'post_cate_add_api',
 })
@@ -82,6 +86,7 @@ urlpatterns = [
 
     #post_cate
     path('post_cate_get_all_api/', post_cate_get_all_api),
+    path('post_cate_get_list_page_all_api/', post_cate_get_list_page_all_api),
     path('post_cate_add_api/', post_cate_add_api),
     path('post_cate_update_api/', post_cate_update_api),
     path('post_cate_delete_api/', post_cate_delete_api),
