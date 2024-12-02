@@ -46,5 +46,5 @@ urlpatterns = [
     path('user/add_user_to_group/', add_user_to_group),
     path('user/user_get_all_api/', user_get_all_api),
     path('group/group_get_all_api/', group_get_all_api),
-    path('user/delete_user_api/', delete_user_api),
+    path('user/delete_user_api/', UserDeleteAPIView.as_view(), name='delete_user_api'),
 ]

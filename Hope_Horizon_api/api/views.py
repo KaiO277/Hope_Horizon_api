@@ -32,6 +32,7 @@ from .serializers import *
 from . import status_http
 from .models import *
 from .serializers import RegisterSerializer
+from .serializers import UserDeleteSerializer
 
 # Create your views here.
 
@@ -129,21 +130,16 @@ class UserMVS(viewsets.ModelViewSet):
 
         return Response({"groups": groups_data}, status=status.HTTP_200_OK)
     
-    @action(methods=['DELETE'], detail=False, url_name='delete_user_api', url_path='delete_user_api')
-    def delete_user_api(self, request, *args, **kwargs):
-        try:
-            serializers - self.serializer_class(data=request.data)
-            if serializers.is_valid():
-                data = {}
-                result = serializers.delete(request)
-                if result:
-                    data['message'] = 'Delete successfully!'
-                    return Response(data=data, status=status.HTTP_204_NO_CONTENT)
-            return Response(data=serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as error:
-            print("UserMVS_delete_user_api_error: ", error)
-        return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
-
+class UserDeleteAPIView(APIView):
+    def delete(self, request, *args, **kwargs):
+        serializer = UserDeleteSerializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                serializer.delete()
+                return Response({'message': 'Deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
+            except serializers.ValidationError as error:
+                return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class GoogleView(APIView):
     def post(self, request):

@@ -8,17 +8,10 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
-# from django.core.mail import send_mail, EmailMessage
-# from django.template.loader import render_to_string
-# from django.conf import settings
 import socket
 import calendar
 import time
 from getmac import get_mac_address as gma
-# from user_agents import parse
-# from django.contrib.auth.base_user import BaseUserManager
-# from django.contrib.auth.hashers import make_password
-# from datetime import timedelta, datetime
 
 from api.models import *
 
@@ -106,17 +99,22 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MySimpleJWTSerializer
 
 class UserSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=True)
 
     class Meta:
         model = User
         exclude = ['password', 'last_login', 'is_active', 'user_permissions']
+ 
+class UserDeleteSerializer(serializers.Serializer):  # Không sử dụng ModelSerializer
+    id = serializers.IntegerField(required=True)  # Chỉ cần trường `id`
 
-    def delete(self, request):
+    def delete(self):
         try:
-            print("id: ",self.validated_data['id'])
-            model = User.objects.get(pk=self.validated_data['id'])
-            model.delete()
+            user_id = self.validated_data['id']
+            user = User.objects.get(pk=user_id)
+            user.delete()
             return True
+        except User.DoesNotExist:
+            raise serializers.ValidationError({'error': f"User with id {user_id} does not exist."})
         except Exception as error:
-            print("UserSerializers_delete_error: ",error)
-            return None
+            raise serializers.ValidationError({'error': 'An unexpected error occurred.'})
