@@ -19,7 +19,7 @@ from api.post.views import CourseRegisterWebinarPagination
 
 class PodcastCateMVS(viewsets.ModelViewSet):
     serializer_class = PodcastCateSerializers
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     pagination_class = CourseRegisterWebinarPagination
 
     def get_queryset(self):
@@ -46,20 +46,33 @@ class PodcastCateMVS(viewsets.ModelViewSet):
         serializers = self.serializer_class(queryset, many=True)
         return Response(data=serializers.data, status=status.HTTP_200_OK)
     
-    @action(methods=['POST'], detail=False, url_path='podcast_cate_add_api', url_name='podcast_cate_add_api')
     def podcast_cate_add_api(self, request, *args, **kwargs):
         try:
             serializers = self.serializer_class(data=request.data)
             if serializers.is_valid():
                 model = serializers.add(request)
                 if model:
-                    data = {}
-                    data['message'] = 'Add successfully'
-                    return Response(data=data, status=status.HTTP_201_CREATED)
-            return Response(data=serializers.error, status=status.HTTP_400_BAD_REQUEST)
+                    return Response(
+                        {'message': 'Add successfully'},
+                        status=status.HTTP_201_CREATED
+                    )
+                # If `add` method indicates duplicate or failure
+                return Response(
+                    {'error': 'Duplicate or invalid data'},
+                    status=status_http.HTTP_ME_458_DUPLICATE
+                )
+
+            # Return validation errors
+            return Response(
+                {'error': serializers.errors},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         except Exception as e:
             print("PodcastCateMVS_add_api: ", e)
-        return Response({'error': 'Bad request'}, status = status.HTTP_BAD_REQUEST)
+            return Response(
+                {'error': 'Internal server error'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
     
     @action(methods=['PATCH'], detail=False, url_path='podcast_cate_update_api', url_name='podcast_cate_update_api')
     def podcast_cate_update_api(self, request, *args, **kwargs):

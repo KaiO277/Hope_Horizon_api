@@ -74,6 +74,10 @@ class PostCateMVS(viewsets.ModelViewSet):
                     data = {}
                     data['message'] = 'Add successfully!'
                     return Response(data=data, status=status.HTTP_201_CREATED)
+                return Response(
+                    {'error': 'Duplicate or invalid data'},
+                    status=status_http.HTTP_ME_458_DUPLICATE
+                )
             return Response(data=serializers.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as error:
             print("PostCateMVS_add_api: ", error)
@@ -102,7 +106,7 @@ class PostCateMVS(viewsets.ModelViewSet):
     @action(methods=['DELETE'], detail=False, url_path='post_cate_delete_api', url_name='post_cate_delete_api')
     def post_cate_delete_api(self, request, *args, **kwargs):
         try:
-            serializers = self.serializers_class(data=request.data)
+            serializers = self.serializer_class(data=request.data)
             if serializers.is_valid():
                 data = {}
                 result = serializers.delete(request)
@@ -129,6 +133,10 @@ class PostAuthorMVS(viewsets.ModelViewSet):
                     data = {}
                     data['message'] = 'Add successfully!'
                     return Response(data=data, status=status.HTTP_201_CREATED)
+                return Response(
+                    {'error': 'Duplicate or invalid data'},
+                    status=status_http.HTTP_ME_458_DUPLICATE
+                )
             return Response(data=serializers.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as error:
             print("PostAuthorMVS_add_api: ", error)

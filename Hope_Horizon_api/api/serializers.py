@@ -110,3 +110,13 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         exclude = ['password', 'last_login', 'is_active', 'user_permissions']
+
+    def delete(self, request):
+        try:
+            print("id: ",self.validated_data['id'])
+            model = User.objects.get(pk=self.validated_data['id'])
+            model.delete()
+            return True
+        except Exception as error:
+            print("UserSerializers_delete_error: ",error)
+            return None

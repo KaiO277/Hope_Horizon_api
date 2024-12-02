@@ -26,6 +26,10 @@ group_get_all_api = UserMVS.as_view({
     'get': 'group_get_all_api',
 })
 
+delete_user_api = UserMVS.as_view({
+    'delete':'delete_user_api'
+})
+
 urlpatterns = [
     #
     path('post/', include('api.post.urls')),
@@ -42,4 +46,5 @@ urlpatterns = [
     path('user/add_user_to_group/', add_user_to_group),
     path('user/user_get_all_api/', user_get_all_api),
     path('group/group_get_all_api/', group_get_all_api),
+    path('user/delete_user_api/', delete_user_api),
 ]

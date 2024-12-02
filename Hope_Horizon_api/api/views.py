@@ -128,6 +128,22 @@ class UserMVS(viewsets.ModelViewSet):
         ]
 
         return Response({"groups": groups_data}, status=status.HTTP_200_OK)
+    
+    @action(methods=['DELETE'], detail=False, url_name='delete_user_api', url_path='delete_user_api')
+    def delete_user_api(self, request, *args, **kwargs):
+        try:
+            serializers - self.serializer_class(data=request.data)
+            if serializers.is_valid():
+                data = {}
+                result = serializers.delete(request)
+                if result:
+                    data['message'] = 'Delete successfully!'
+                    return Response(data=data, status=status.HTTP_204_NO_CONTENT)
+            return Response(data=serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            print("UserMVS_delete_user_api_error: ", error)
+        return Response({'error':'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class GoogleView(APIView):
     def post(self, request):

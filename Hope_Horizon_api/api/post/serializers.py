@@ -13,6 +13,10 @@ class PostCateSerializers(serializers.ModelSerializer):
         try:
             title = self.validated_data['title']
 
+            if PostCate.objects.filter(title=title).exists():
+                print("PodcastCateSerializers_add_error: Dulicate title")
+                return None 
+
             return PostCate.objects.create(
                 title=title
             )
@@ -22,7 +26,6 @@ class PostCateSerializers(serializers.ModelSerializer):
 
     def update(self,request):
         try:
-            # print("post_cate_id: ",self.validated_data['title'])
             post_cate_id = self.validated_data['id']
             title = self.validated_data['title']
 
@@ -57,6 +60,9 @@ class PostAuthorSerializers(serializers.ModelSerializer):
     def add(self, request):
         try:
             name = self.validated_data['name']
+            if PostAuthor.objects.filter(name=name).exists():
+                print("PostAuthorSerializers_add_error: Dulicate name")
+                return None
             return PostAuthor.objects.create(
                 name = name
             )

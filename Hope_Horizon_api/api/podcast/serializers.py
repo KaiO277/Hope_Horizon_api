@@ -12,11 +12,18 @@ class PodcastCateSerializers(serializers.ModelSerializer):
 
     def add(self, request):
         try:
-            title = self.validated_data['title']
+            title = self.validated_data.get('title')
+            
+            if PodcastCate.objects.filter(title=title).exists():
+                # Handle duplicate case
+                print("PodcastCateSerializers_add_error: Duplicate title")
+                return None
+            
             return PodcastCate.objects.create(title=title)
+
         except Exception as e:
             print("PodcastCateSerializer_add_error: ", e)
-            return None
+            raise
         
     def update(self, request):
         try:
@@ -53,10 +60,19 @@ class PodcastAuthorSerializers(serializers.ModelSerializer):
 
     def add(self, request):
         try:
-            name = self.validated_data['name']
-
+            # Extract the name from validated data
+            name = self.validated_data.get('name')
+            
+            # Check if an author with the same name already exists
+            if PodcastAuthor.objects.filter(name=name).exists():
+                print("PodcastAuthorSerializers_add_error: Duplicate name")
+                return None
+            
+            # Create and return the new PodcastAuthor instance
             return PodcastAuthor.objects.create(name=name)
+
         except Exception as error:
+            # Log the error and return None
             print("PodcastAuthorSerializers_add_error: ", error)
             return None
         
