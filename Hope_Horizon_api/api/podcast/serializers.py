@@ -124,7 +124,7 @@ class PodcastIndexSerializers(serializers.ModelSerializer):
             content = self.validated_data.get('content')  # Có thể không có
 
             # Tạo tên podcast duy nhất từ title
-            unique_title = generate_unique_filename(title, content)
+            # unique_title = generate_unique_filename(title, content)
 
             # Tạo và lưu PodcastIndex1
             podcast = PodcastIndex1.objects.create(
@@ -132,7 +132,7 @@ class PodcastIndexSerializers(serializers.ModelSerializer):
                 image_title=image_title,
                 podcast_cate_id=podcast_cate_id,
                 podcast_author_id=podcast_author_id,
-                content=unique_title
+                content=content
             )
 
             return podcast

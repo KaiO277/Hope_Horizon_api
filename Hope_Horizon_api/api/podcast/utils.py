@@ -3,12 +3,12 @@ from datetime import datetime
 from django.utils.text import slugify
 import random
 
-def generate_unique_filename(title, file):   
+def generate_unique_filename(title, file_name):   
     # Lấy ngày giờ hiện tại theo định dạng "YYYYMMDD_HHMMSS"
     current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-    number_ramdom = random.uniform(0,100000)
+    number_random = random.uniform(0, 100000)
     
-    # Tạo tên mới cho file bằng cách ghép tên gốc với thời gian hiện tại
-    unique_filename = f"{title}_{current_time}_{number_ramdom}"
+    # Tạo tên file duy nhất
+    unique_filename = f"{title}_{current_time}_{number_random}"
     
     return unique_filename

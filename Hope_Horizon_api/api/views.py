@@ -129,7 +129,34 @@ class UserMVS(viewsets.ModelViewSet):
         ]
 
         return Response({"groups": groups_data}, status=status.HTTP_200_OK)
-    
+
+    @action(methods=['DELETE'], detail=False, url_name='remove_user_from_group', url_path='remove_user_from_group')
+    def remove_user_from_group(self, request, *args, **kwargs):
+        user_id = request.data.get('user_id')
+        group_id = request.data.get('group_id')
+
+        if not user_id or not group_id:
+            return Response({"error": "Both user_id and group_id are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            group = Group.objects.get(id=group_id)
+        except Group.DoesNotExist:
+            return Response({"error": "Group not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        if not user.groups.filter(id=group.id).exists():
+            return Response({"error": f"User {user.username} is not in group {group.name}"}, 
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        user.groups.remove(group)
+
+        return Response({"message": f"User {user.username} removed from group {group.name}"}, 
+                        status=status.HTTP_200_OK)
+
 class UserDeleteAPIView(APIView):
     def delete(self, request, *args, **kwargs):
         serializer = UserDeleteSerializer(data=request.data)
