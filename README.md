@@ -63,21 +63,7 @@ Nếu chạy bằng mạng LAN:
 ```
 http://<IP-của-máy-chạy-server>:8000/
 ```
-📁 Cấu trúc thư mục
-```
-Hope_Horizon_api/
-├── manage.py
-├── requirements.txt
-├── <tên_app>/
-│   ├── models.py
-│   ├── views.py
-│   ├── serializers.py
-│   ├── urls.py
-│   └── ...
-├── templates/
-├── static/
-└── ...
-```
+
 📝 Ghi chú
 Nếu thay đổi các model, hãy chạy lại:
 
