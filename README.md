@@ -17,7 +17,7 @@ Dự án **Hope Horizon API** cung cấp backend cho nền tảng hỗ trợ c�
 
 ### 1. Clone hoặc tải mã nguồn
 ```bash
-git clone [[https://github.com/your-username/Hope_Horizon_api.git](https://github.com/KaiO277/Hope_Horizon_api.git)](https://github.com/KaiO277/Hope_Horizon_api.git)
+git clone https://github.com/KaiO277/Hope_Horizon_api.git
 ```
 
 2. Tạo và kích hoạt môi trường ảo
@@ -75,3 +75,16 @@ python manage.py migrate
 Dự án mặc định chạy trên cổng 8000, có thể thay đổi nếu cần.
 
 Đảm bảo môi trường ảo đã được kích hoạt khi chạy dự án.
+
+## 🔗 Giao diện người dùng (Frontend)
+
+Dự án Hope Horizon bao gồm hai phần chính:
+
+- **Backend (API)** – Bạn đang xem phần này.
+- **Frontend (UI)** – Giao diện người dùng được xây dựng bằng **ReactJS**, kết nối với API để hiển thị và tương tác dữ liệu.
+
+👉 **Source code giao diện người dùng (ReactJS):**  
+[https://github.com/KaiO277/hope-horizon-ui.git](https://github.com/KaiO277/hope-horizon-ui.git)
+
+> Giao diện React này tiêu thụ các endpoint REST của API. Đảm bảo backend đang chạy trước khi khởi chạy UI để hoạt động đầy đủ.
+
