@@ -58,7 +58,9 @@ python manage.py runserver 0.0.0.0:8000
 Truy cập trình duyệt:
 ```
 http://127.0.0.1:8000/
-#Nếu chạy bằng mạng LAN:
+```
+Nếu chạy bằng mạng LAN:
+```
 http://<IP-của-máy-chạy-server>:8000/
 ```
 📁 Cấu trúc thư mục
