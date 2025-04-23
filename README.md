@@ -20,11 +20,69 @@ Dự án **Hope Horizon API** cung cấp backend cho nền tảng hỗ trợ c�
 git clone https://github.com/your-username/Hope_Horizon_api.git
 ```
 
-Tạo và kích hoạt môi trường ảo
+2. Tạo và kích hoạt môi trường ảo
+```
 python -m venv myenv
 myenv\Scripts\activate        # Trên Windows
 # hoặc
 source myenv/bin/activate     # Trên macOS/Linux
+```
 
-Cài đặt các thư viện cần thiết
+
+3. Cài đặt các thư viện cần thiết
+```
 pip install -r requirements.txt
+```
+
+4. Di chuyển vào thư mục dự án
+```
+cd Hope_Horizon_api
+```
+
+5. Cập nhật cơ sở dữ liệu
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+7. Chạy dự án
+🔸 Chạy trên một máy (localhost)
+
+python manage.py runserver
+🔸 Chạy cho nhiều thiết bị cùng mạng LAN
+bash
+Sao chép
+Chỉnh sửa
+python manage.py runserver 0.0.0.0:8000
+🧪 Kiểm tra hoạt động
+Truy cập trình duyệt:
+```
+http://127.0.0.1:8000/
+#Nếu chạy bằng mạng LAN:
+http://<IP-của-máy-chạy-server>:8000/
+```
+📁 Cấu trúc thư mục
+```
+Hope_Horizon_api/
+├── manage.py
+├── requirements.txt
+├── <tên_app>/
+│   ├── models.py
+│   ├── views.py
+│   ├── serializers.py
+│   ├── urls.py
+│   └── ...
+├── templates/
+├── static/
+└── ...
+```
+📝 Ghi chú
+Nếu thay đổi các model, hãy chạy lại:
+
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+
+Dự án mặc định chạy trên cổng 8000, có thể thay đổi nếu cần.
+
+Đảm bảo môi trường ảo đã được kích hoạt khi chạy dự án.
