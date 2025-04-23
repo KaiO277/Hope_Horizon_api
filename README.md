@@ -45,14 +45,15 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 7. Chạy dự án
+   
 🔸 Chạy trên một máy (localhost)
-
+```
 python manage.py runserver
+```
 🔸 Chạy cho nhiều thiết bị cùng mạng LAN
-bash
-Sao chép
-Chỉnh sửa
+```
 python manage.py runserver 0.0.0.0:8000
+```
 🧪 Kiểm tra hoạt động
 Truy cập trình duyệt:
 ```
