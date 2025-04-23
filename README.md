@@ -1,12 +1,30 @@
-- Cài máy ảo: python -m venv myenv
-- Bật máy ảo: myenv\Scripts\activate
-- Cài những phiên bản đã được liệt kê trong file requirements.txt bằng lệnh: pip install -r requirements.txt
-- cd đến cd Hope_Horizon_api để chạy project: cd .\Hope_Horizon_api\
-- Cập nhật lại database cho dự án với hai lệnh:
-     python manage.py makemigrations
-     python manage.py migrate
-- Run dự án
-  + Nếu bạn chạy một máy thì chạy lệnh sau:
-    python manage.py runserver
-  + Nếu bạn chạy hai máy cùng mạng thì chạy lệnh sau:
-    python manage.py runserver 0.0.0.0:8000
+# 🌟 Hope Horizon API
+
+Dự án **Hope Horizon API** cung cấp backend cho nền tảng hỗ trợ cộng đồng Hope Horizon. Dự án được xây dựng với Django và REST framework, phục vụ mục tiêu kết nối những người cần giúp đỡ với các tổ chức và cá nhân thiện nguyện.
+
+---
+
+## 📋 Yêu cầu hệ thống
+
+- Python 3.8+
+- pip
+- Git (tuỳ chọn)
+- Hệ điều hành: Windows / macOS / Linux
+
+---
+
+## ⚙️ Cài đặt & Chạy dự án
+
+### 1. Clone hoặc tải mã nguồn
+```bash
+git clone https://github.com/your-username/Hope_Horizon_api.git
+```
+
+Tạo và kích hoạt môi trường ảo
+python -m venv myenv
+myenv\Scripts\activate        # Trên Windows
+# hoặc
+source myenv/bin/activate     # Trên macOS/Linux
+
+Cài đặt các thư viện cần thiết
+pip install -r requirements.txt
