@@ -17,7 +17,7 @@ Dự án **Hope Horizon API** cung cấp backend cho nền tảng hỗ trợ c�
 
 ### 1. Clone hoặc tải mã nguồn
 ```bash
-git clone https://github.com/your-username/Hope_Horizon_api.git
+git clone [[https://github.com/your-username/Hope_Horizon_api.git](https://github.com/KaiO277/Hope_Horizon_api.git)](https://github.com/KaiO277/Hope_Horizon_api.git)
 ```
 
 2. Tạo và kích hoạt môi trường ảo
